@@ -11,7 +11,7 @@ namespace p_ProveedorStreaming.Aspectos
             if (invocation.Method.Name == "ObtenerNuevoRecord")
             {
                 // PRE: validar el nuevo record antes de registrarlo
-                ulong nuevoRecord = (ulong)invocation.Arguments[0];
+                ulong nuevoRecord = invocation.Arguments[0] is ulong r ? r : 0;
                 ulong recordActual = (invocation.InvocationTarget as Juego)?.Nro_record ?? 0;
 
                 if (nuevoRecord <= recordActual)
