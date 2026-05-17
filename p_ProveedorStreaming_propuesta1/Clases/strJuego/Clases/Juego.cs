@@ -17,6 +17,9 @@ namespace p_ProveedorStreaming.Clases.strJuego.Clases
         public PublisherNuevoTitulo pub_nuevo_tit = new();
         public PublisherJuego pub_nuevo_rec = new();
 
+        // Requerido por Castle.DynamicProxy para generar el proxy de clase
+        protected Juego() { nombre = string.Empty; genero = string.Empty; }
+
         public Juego(string nombre, string genero)
         {
             this.nombre = nombre;
@@ -26,10 +29,10 @@ namespace p_ProveedorStreaming.Clases.strJuego.Clases
         }
 
         // ACCESORES CORTOS
-        public string Nombre => nombre;
-        public string Genero => genero;
-        public ulong Nro_record { get => nro_record; set => nro_record = value; }
-        public Usuario? Usuario_record { get => usuario_record; set => usuario_record = value; }
+        public virtual string Nombre => nombre;
+        public virtual string Genero => genero;
+        public virtual ulong Nro_record { get => nro_record; set => nro_record = value; }
+        public virtual Usuario? Usuario_record { get => usuario_record; set => usuario_record = value; }
 
         // MÉTODOS DE NOTIFICACIÓN
         public void ObtenerNuevoTitulo(object titulo, INuevoTitulo notificador)
@@ -60,8 +63,8 @@ namespace p_ProveedorStreaming.Clases.strJuego.Clases
             Console.WriteLine($"[RÉCORD] ¡Nuevo récord de {nro_record} alcanzado en {nombre}!");
         }
 
-        // Suma puntos al usuario según el puesto obtenido en la partida
-        public string RegistrarPuntaje(Usuario usuario, byte puesto)
+        // Virtual para que Castle delegue al target donde nombre tiene el valor real
+        public virtual string RegistrarPuntaje(Usuario usuario, byte puesto)
         {
             int puntos;
             switch (puesto)

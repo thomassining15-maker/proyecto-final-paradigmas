@@ -14,13 +14,16 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases
         // Usuario que está reproduciendo este contenido — se debe asignar antes de Reproducir()
         public Usuario? UsuarioActivo { get; set; }
 
+        // Requerido por Castle.DynamicProxy
+        protected Contenido() : this(string.Empty) { }
+
         public Contenido(string nombre)
         {
             this.nombre = nombre;
             pub_contenido_visto.EventoContenidoVisto += EventHandlerContenidoVisto;
         }
 
-        public string Nombre => nombre;
+        public virtual string Nombre => nombre;
 
         // Virtual para que el proxy de Castle.DynamicProxy pueda interceptarlo
         public virtual void Reproducir()

@@ -8,6 +8,9 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases.strSerie
         private byte temporadas;
         private byte cap_x_temp;
 
+        // Requerido por Castle.DynamicProxy para generar el proxy de clase
+        protected Serie() : base(string.Empty) { }
+
         public Serie(string nombre, byte temporadas, byte cap_x_temp) : base(nombre)
         {
             this.Temporadas = temporadas;

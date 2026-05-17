@@ -8,6 +8,9 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula
         private TimeSpan duracion;
         private byte calificacion;
 
+        // Requerido por Castle.DynamicProxy para generar el proxy de clase
+        protected Pelicula() : base(string.Empty) { }
+
         public Pelicula(string nombre, TimeSpan duracion, byte calificacion) : base(nombre)
         {
             this.duracion = duracion;
