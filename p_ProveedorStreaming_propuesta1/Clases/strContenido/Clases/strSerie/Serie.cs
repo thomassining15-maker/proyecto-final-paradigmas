@@ -1,7 +1,5 @@
 ﻿using p_ProveedorStreaming.Eventos;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace p_ProveedorStreaming.Clases.strContenido.Clases.strSerie
 {
@@ -9,7 +7,6 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases.strSerie
     {
         private byte temporadas;
         private byte cap_x_temp;
-        private PublisherNuevoTitulo pub_nuevo_tit;
 
         public Serie(string nombre, byte temporadas, byte cap_x_temp) : base(nombre)
         {
@@ -17,10 +14,28 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases.strSerie
             this.Cap_x_temp = cap_x_temp;
         }
 
-        public byte Temporadas { get => temporadas; set => temporadas = value >= ReglasNegocioContenido.min_temps_serie ? 
-                value : throw new Exception($"El minimo de temporadas por serie es {ReglasNegocioContenido.min_temps_serie}"); }
+        public byte Temporadas
+        {
+            get => temporadas;
+            set => temporadas = value >= ReglasNegocioContenido.min_temps_serie
+                ? value
+                : throw new Exception($"Mínimo de temporadas por serie: {ReglasNegocioContenido.min_temps_serie}");
+        }
 
-        public byte Cap_x_temp { get => cap_x_temp; set => cap_x_temp = value >= ReglasNegocioContenido.min_caps_x_temp ? 
-                value : throw new Exception($"El numero minimo de capitulos por temporaada es {ReglasNegocioContenido.min_caps_x_temp}"); }
+        public byte Cap_x_temp
+        {
+            get => cap_x_temp;
+            set => cap_x_temp = value >= ReglasNegocioContenido.min_caps_x_temp
+                ? value
+                : throw new Exception($"Mínimo de capítulos por temporada: {ReglasNegocioContenido.min_caps_x_temp}");
+        }
+
+        public override void ActualizarPuntaje()
+        {
+            // Otorga puntos por cada episodio visto (un episodio al llamar Reproducir)
+            UsuarioActivo?.SumarPuntos(ReglasNegocioContenido.pts_episodio_corto);
+            UsuarioActivo?.CambiarCategoria(UsuarioActivo);
+            Console.WriteLine($"[Puntaje] +{ReglasNegocioContenido.pts_episodio_corto} pts a {UsuarioActivo?.Nombre} por ver episodio de '{Nombre}'");
+        }
     }
 }

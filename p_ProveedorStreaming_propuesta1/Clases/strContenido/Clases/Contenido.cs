@@ -1,14 +1,17 @@
 ﻿using p_ProveedorStreaming.Interfaces;
 using p_ProveedorStreaming.Eventos;
+using p_ProveedorStreaming.Clases.strUsuario;
 using System;
 
 namespace p_ProveedorStreaming.Clases.strContenido.Clases
 {
-    // Implementa IActualizacionPuntos para permitir la interceptación
     public abstract class Contenido : IActualizacionPuntos
     {
         private string nombre;
         public PublisherNuevoTitulo pub_nuevo_tit = new();
+
+        // Usuario que está reproduciendo este contenido — se debe asignar antes de Reproducir()
+        public Usuario? UsuarioActivo { get; set; }
 
         public Contenido(string nombre)
         {
@@ -17,18 +20,17 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases
 
         public string Nombre => nombre;
 
-        // Marcamos como virtual para que el Interceptor_GestionPuntos haga su magia
+        // Virtual para que el proxy de Castle.DynamicProxy pueda interceptarlo
         public virtual void Reproducir()
         {
             Console.WriteLine($"[Reproduciendo] {nombre}...");
-            // Aquí el interceptor detecta la reproducción y llama a ActualizarPuntaje
         }
 
-        // Este método será invocado por el interceptor Interceptor_GestionPuntos
+        // Invocado por Interceptor_GestionPuntos tras Reproducir()
+        // Cada subclase sobreescribe para sumar sus puntos específicos
         public virtual void ActualizarPuntaje()
         {
-            // La lógica de puntos no va aquí, la maneja el Interceptor usando ReglaNegocioContenido
-            Console.WriteLine($"[Sistema] Interceptando para actualizar puntaje de: {nombre}");
+            Console.WriteLine($"[Puntaje] Sin puntos definidos para: {nombre}");
         }
 
         public void ObtenerNuevoTitulo(object titulo)

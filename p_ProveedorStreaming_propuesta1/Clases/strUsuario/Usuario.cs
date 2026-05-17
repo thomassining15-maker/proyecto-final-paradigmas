@@ -43,12 +43,23 @@ namespace p_ProveedorStreaming.Clases.strUsuario
         public int ObtenerPuntos() => (int)this.puntos;
 
         // IMPLEMENTACIÓN DE LA INTERFAZ
-        // Este método realiza la lógica de cambio básica de la clase
         public void CambiarCategoria(Usuario usuario)
         {
-            Console.WriteLine($"[Sistema] Verificando puntos de {usuario.Nombre}...");
-            // Aquí podrías poner una lógica simple si no quieres usar la inyección
-            if (usuario.Puntos > 1000) usuario.Categoria = l_categorias.Pro;
+            l_categorias categoriaAnterior = usuario.Categoria;
+            l_categorias nuevaCategoria;
+
+            if (usuario.Puntos >= (ulong)ReglasNegocioUsuario.puntos_pro)
+                nuevaCategoria = l_categorias.Master;
+            else if (usuario.Puntos >= (ulong)ReglasNegocioUsuario.puntos_general)
+                nuevaCategoria = l_categorias.Pro;
+            else
+                nuevaCategoria = l_categorias.General;
+
+            if (nuevaCategoria != categoriaAnterior)
+            {
+                usuario.Categoria = nuevaCategoria;
+                pub_cambio_cat.InformarCambioCategoria(usuario, nuevaCategoria);
+            }
         }
 
         // SOBRECARGA PARA INYECCIÓN DE DEPENDENCIAS

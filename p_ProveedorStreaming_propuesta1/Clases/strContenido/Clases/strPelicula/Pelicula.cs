@@ -1,7 +1,5 @@
 ﻿using p_ProveedorStreaming.Eventos;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula
 {
@@ -9,7 +7,6 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula
     {
         private TimeSpan duracion;
         private byte calificacion;
-        private PublisherNuevoTitulo pub_nuevo_tit;
 
         public Pelicula(string nombre, TimeSpan duracion, byte calificacion) : base(nombre)
         {
@@ -17,10 +14,24 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula
             Calificacion = calificacion;
         }
 
-        public TimeSpan Duracion { get => duracion;}
-        public byte Calificacion { get => calificacion; set => calificacion =
-                value >= ReglasNegocioContenido.calificacion_min && value <= ReglasNegocioContenido.calificacion_max ? 
-                value : throw new Exception($"La calificacion para la pelicula no es válida," +
-                    $" debe de estar entre {ReglasNegocioContenido.calificacion_min} y {ReglasNegocioContenido.calificacion_max}"); }
+        public TimeSpan Duracion => duracion;
+        public byte Calificacion
+        {
+            get => calificacion;
+            set => calificacion = value >= ReglasNegocioContenido.calificacion_min && value <= ReglasNegocioContenido.calificacion_max
+                ? value
+                : throw new Exception($"Calificación inválida: debe estar entre {ReglasNegocioContenido.calificacion_min} y {ReglasNegocioContenido.calificacion_max}");
+        }
+
+        public override void ActualizarPuntaje()
+        {
+            int puntos = duracion < new TimeSpan(1, 30, 0)
+                ? ReglasNegocioContenido.pts_pelicula_corta
+                : ReglasNegocioContenido.pts_pelicula_larga;
+
+            UsuarioActivo?.SumarPuntos(puntos);
+            UsuarioActivo?.CambiarCategoria(UsuarioActivo);
+            Console.WriteLine($"[Puntaje] +{puntos} pts a {UsuarioActivo?.Nombre} por ver '{Nombre}'");
+        }
     }
 }

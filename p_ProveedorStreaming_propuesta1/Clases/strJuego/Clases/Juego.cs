@@ -11,7 +11,7 @@ namespace p_ProveedorStreaming.Clases.strJuego.Clases
         private string nombre;
         private string genero;
         private ulong nro_record;
-        private Usuario usuario_record;
+        private Usuario? usuario_record;
 
         // Publishers y eventos
         public PublisherNuevoTitulo pub_nuevo_tit = new();
@@ -29,7 +29,7 @@ namespace p_ProveedorStreaming.Clases.strJuego.Clases
         public string Nombre => nombre;
         public string Genero => genero;
         public ulong Nro_record { get => nro_record; set => nro_record = value; }
-        public Usuario Usuario_record { get => usuario_record; set => usuario_record = value; }
+        public Usuario? Usuario_record { get => usuario_record; set => usuario_record = value; }
 
         // MÉTODOS DE NOTIFICACIÓN
         public void ObtenerNuevoTitulo(object titulo, INuevoTitulo notificador)
@@ -58,6 +58,23 @@ namespace p_ProveedorStreaming.Clases.strJuego.Clases
         public void EventHandler(ulong nro_record)
         {
             Console.WriteLine($"[RÉCORD] ¡Nuevo récord de {nro_record} alcanzado en {nombre}!");
+        }
+
+        // Suma puntos al usuario según el puesto obtenido en la partida
+        public string RegistrarPuntaje(Usuario usuario, byte puesto)
+        {
+            int puntos;
+            switch (puesto)
+            {
+                case 1: puntos = ReglasNegocioJuego.ptos_primerpuesto; break;
+                case 2: puntos = ReglasNegocioJuego.ptos_segundopuesto; break;
+                case 3: puntos = ReglasNegocioJuego.ptos_tercerpuesto; break;
+                default: puntos = ReglasNegocioJuego.ptos_resto; break;
+            }
+
+            usuario.SumarPuntos(puntos);
+            usuario.CambiarCategoria(usuario);
+            return $"[Juego] +{puntos} pts a {usuario.Nombre} (puesto {puesto}) en '{nombre}'";
         }
     }
 }
