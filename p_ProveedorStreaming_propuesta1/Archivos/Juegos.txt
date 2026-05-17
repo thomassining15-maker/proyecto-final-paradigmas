@@ -1,0 +1,7 @@
+# Formato: nombre|genero
+# Líneas que empiezan con # son ignoradas
+FIFA 25|Deportes
+Call of Duty|Accion
+Minecraft|Aventura
+League of Legends|Estrategia
+Fortnite|Battle Royale

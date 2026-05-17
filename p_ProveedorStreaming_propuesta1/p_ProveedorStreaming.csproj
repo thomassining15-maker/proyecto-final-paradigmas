@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Archivos\**\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Castle.Core" Version="5.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.10" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.10" />

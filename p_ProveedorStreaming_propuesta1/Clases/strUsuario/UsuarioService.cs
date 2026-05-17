@@ -1,6 +1,7 @@
 ﻿using p_ProveedorStreaming.Clases.strUsuario;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using static p_ProveedorStreaming.Clases.strUsuario.ReglasNegocioUsuario;
 
@@ -48,8 +49,30 @@ namespace p_ProveedorStreaming.Clases.strUsuario
 
         public l_categorias ObtenerCategoria(ulong id)
         {
-            // Si el ID no existe, BuscarPorId lanzará el error 
             return BuscarPorId(id).Categoria;
+        }
+
+        public void Cargar(string nomArchivo)
+        {
+            string ruta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Archivos", nomArchivo);
+
+            if (!File.Exists(ruta))
+                throw new FileNotFoundException($"No se encontró el archivo: {ruta}");
+
+            foreach (var linea in File.ReadAllLines(ruta))
+            {
+                if (string.IsNullOrWhiteSpace(linea) || linea.StartsWith("#"))
+                    continue;
+
+                try
+                {
+                    Agregar(new Usuario(linea.Trim()));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error procesando línea '{linea}': {ex.Message}");
+                }
+            }
         }
     }
 }

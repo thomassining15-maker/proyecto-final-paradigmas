@@ -2,6 +2,7 @@
 using p_ProveedorStreaming.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace p_ProveedorStreaming.Clases.strJuego
@@ -66,6 +67,34 @@ namespace p_ProveedorStreaming.Clases.strJuego
         public void FinalizarPartida()
         {
             Console.WriteLine("[Sistema] Partida finalizada. Verificando récords vía interceptor...");
+        }
+
+        public void Cargar(string nomArchivo)
+        {
+            string ruta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Archivos", nomArchivo);
+
+            if (!File.Exists(ruta))
+                throw new FileNotFoundException($"No se encontró el archivo: {ruta}");
+
+            foreach (var linea in File.ReadAllLines(ruta))
+            {
+                if (string.IsNullOrWhiteSpace(linea) || linea.StartsWith("#"))
+                    continue;
+
+                var datos = linea.Split('|');
+
+                if (datos.Length != 2)
+                    throw new Exception($"Formato incorrecto en línea: '{linea}'. Esperado: nombre|genero");
+
+                try
+                {
+                    Agregar(new Juego(datos[0].Trim(), datos[1].Trim()));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error procesando línea '{linea}': {ex.Message}");
+                }
+            }
         }
     }
 }
