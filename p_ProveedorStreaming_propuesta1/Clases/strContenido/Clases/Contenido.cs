@@ -9,6 +9,7 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases
     {
         private string nombre;
         public PublisherNuevoTitulo pub_nuevo_tit = new();
+        public PublisherContenidoVisto pub_contenido_visto = new();
 
         // Usuario que está reproduciendo este contenido — se debe asignar antes de Reproducir()
         public Usuario? UsuarioActivo { get; set; }
@@ -16,6 +17,7 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases
         public Contenido(string nombre)
         {
             this.nombre = nombre;
+            pub_contenido_visto.EventoContenidoVisto += EventHandlerContenidoVisto;
         }
 
         public string Nombre => nombre;
@@ -31,6 +33,18 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases
         public virtual void ActualizarPuntaje()
         {
             Console.WriteLine($"[Puntaje] Sin puntos definidos para: {nombre}");
+        }
+
+        // Dispara el cuarto evento: contenido visto
+        protected void NotificarContenidoVisto()
+        {
+            if (UsuarioActivo != null)
+                pub_contenido_visto.InformarContenidoVisto(nombre, UsuarioActivo);
+        }
+
+        public void EventHandlerContenidoVisto(string nombreContenido, Usuario usuario)
+        {
+            Console.WriteLine($"[Historial] {usuario.Nombre} terminó de ver '{nombreContenido}'");
         }
 
         public void ObtenerNuevoTitulo(object titulo)

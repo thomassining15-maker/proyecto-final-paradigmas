@@ -36,6 +36,7 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases.strSerie
             UsuarioActivo?.SumarPuntos(ReglasNegocioContenido.pts_episodio_corto);
             UsuarioActivo?.CambiarCategoria(UsuarioActivo);
             Console.WriteLine($"[Puntaje] +{ReglasNegocioContenido.pts_episodio_corto} pts a {UsuarioActivo?.Nombre} por ver episodio de '{Nombre}'");
+            NotificarContenidoVisto();
         }
     }
 }

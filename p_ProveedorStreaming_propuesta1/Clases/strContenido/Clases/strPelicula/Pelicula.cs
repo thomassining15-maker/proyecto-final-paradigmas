@@ -32,6 +32,7 @@ namespace p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula
             UsuarioActivo?.SumarPuntos(puntos);
             UsuarioActivo?.CambiarCategoria(UsuarioActivo);
             Console.WriteLine($"[Puntaje] +{puntos} pts a {UsuarioActivo?.Nombre} por ver '{Nombre}'");
+            NotificarContenidoVisto();
         }
     }
 }
