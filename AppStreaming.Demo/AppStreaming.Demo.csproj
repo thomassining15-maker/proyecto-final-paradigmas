@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Castle.Core" Version="5.2.1" />
+  </ItemGroup>
+
+  <!-- Referencia al DLL de la biblioteca (no ProjectReference, solo el .dll compilado) -->
+  <ItemGroup>
+    <Reference Include="p_ProveedorStreaming">
+      <HintPath>..\p_ProveedorStreaming_propuesta1\bin\Debug\net10.0\p_ProveedorStreaming.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Copiar archivos de datos al output del proyecto demo -->
+  <ItemGroup>
+    <None Update="Archivos\Usuarios.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Archivos\Contenidos.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Archivos\Juegos.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Archivos\Cuentas.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

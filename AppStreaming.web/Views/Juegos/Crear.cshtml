@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Nuevo Juego";
+}
+
+<h2>Nuevo Juego</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<div class="card col-md-5">
+    <div class="card-body">
+        <form asp-action="Crear" method="post">
+            <div class="mb-3">
+                <label class="form-label">Nombre del juego</label>
+                <input name="nombre" class="form-control" required placeholder="Ej: FIFA 26" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Género</label>
+                <input name="genero" class="form-control" required placeholder="Ej: Deportes" />
+            </div>
+            <button type="submit" class="btn btn-warning">Guardar</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+        </form>
+    </div>
+</div>

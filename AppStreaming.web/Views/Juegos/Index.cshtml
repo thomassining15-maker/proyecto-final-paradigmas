@@ -1,0 +1,47 @@
+@model List<p_ProveedorStreaming.Clases.strJuego.Clases.Juego>
+@{
+    ViewData["Title"] = "Juegos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Catálogo de Juegos</h2>
+    @if (Context.Session.GetString("rol") == "admin")
+    {
+        <a class="btn btn-warning" asp-action="Crear">+ Nuevo Juego</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No hay juegos registrados.</p>
+}
+else
+{
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Género</th>
+                <th>Récord</th>
+                <th>Mejor Jugador</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var j in Model)
+            {
+                <tr>
+                    <td>@j.Nombre</td>
+                    <td>@j.Genero</td>
+                    <td>@j.Nro_record pts</td>
+                    <td>@(j.Usuario_record?.Nombre ?? "—")</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Record" asp-route-nombre="@j.Nombre">
+                            Registrar Puntaje
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

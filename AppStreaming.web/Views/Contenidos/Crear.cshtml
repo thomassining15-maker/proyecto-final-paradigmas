@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "Nuevo Contenido";
+}
+
+<h2>Nuevo Contenido</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<div class="card col-md-6">
+    <div class="card-body">
+        <form asp-action="Crear" method="post">
+            <div class="mb-3">
+                <label class="form-label">Tipo de contenido</label>
+                <select name="tipo" id="tipoSelect" class="form-select" onchange="toggleCampos(this.value)">
+                    <option value="P">Película</option>
+                    <option value="S">Serie</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nombre / Título</label>
+                <input name="nombre" class="form-control" required placeholder="Ej: Inception" />
+            </div>
+
+            <div id="campoPelicula">
+                <div class="mb-3">
+                    <label class="form-label">Duración (hh:mm:ss)</label>
+                    <input name="duracion" class="form-control" placeholder="02:00:00" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Calificación (1 o 2)</label>
+                    <input name="calificacion" type="number" min="1" max="2" class="form-control" value="1" />
+                </div>
+            </div>
+
+            <div id="campoSerie" style="display:none;">
+                <div class="mb-3">
+                    <label class="form-label">Temporadas</label>
+                    <input name="temporadas" type="number" min="1" class="form-control" value="1" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Capítulos por temporada</label>
+                    <input name="capXTemp" type="number" min="5" class="form-control" value="5" />
+                </div>
+            </div>
+
+            <p class="text-muted small">
+                Al agregar, se disparará el <strong>evento NuevoTítulo</strong>
+                visible en la bandeja de eventos del inicio.
+            </p>
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleCampos(tipo) {
+            document.getElementById('campoPelicula').style.display = tipo === 'P' ? '' : 'none';
+            document.getElementById('campoSerie').style.display    = tipo === 'S' ? '' : 'none';
+        }
+    </script>
+}

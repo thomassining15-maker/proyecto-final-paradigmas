@@ -1,0 +1,5 @@
+# Formato: nombre_usuario (debe coincidir exactamente con Usuarios.txt)
+# Líneas que empiezan con # son ignoradas
+Maria Gomez
+Carlos Perez
+Luisa Martinez

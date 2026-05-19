@@ -1,0 +1,57 @@
+@model List<p_ProveedorStreaming.Clases.strContenido.Clases.Contenido>
+@{
+    ViewData["Title"] = "Catálogo";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Catálogo de Contenidos</h2>
+    @if (Context.Session.GetString("rol") == "admin")
+    {
+        <a class="btn btn-success" asp-action="Crear">+ Agregar Contenido</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No hay contenidos en el catálogo.</p>
+}
+else
+{
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Tipo</th>
+                <th>Título</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>
+                        @if (c is p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula.Pelicula)
+                        {
+                            <span class="badge bg-primary">Película</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-info text-dark">Serie</span>
+                        }
+                    </td>
+                    <td>@c.Nombre</td>
+                    <td>
+                        @if (c is p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula.Pelicula p)
+                        {
+                            <text>@p.Duracion.ToString(@"hh\:mm\:ss") — Cal: @p.Calificacion</text>
+                        }
+                        else if (c is p_ProveedorStreaming.Clases.strContenido.Clases.strSerie.Serie s)
+                        {
+                            <text>@s.Temporadas temp. / @s.Cap_x_temp ep.</text>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

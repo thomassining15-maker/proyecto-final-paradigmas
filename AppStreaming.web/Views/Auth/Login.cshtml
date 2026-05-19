@@ -1,0 +1,36 @@
+@model AppStreaming.web.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow mt-4">
+            <div class="card-header bg-dark text-white text-center">
+                <h4>&#128100; Iniciar Sesión — StreamingMax</h4>
+            </div>
+            <div class="card-body p-4">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Error</div>
+                }
+                <form asp-action="Login" method="post">
+                    <div class="mb-3">
+                        <label asp-for="Usuario" class="form-label">Usuario</label>
+                        <input asp-for="Usuario" class="form-control" placeholder="admin" />
+                        <span asp-validation-for="Usuario" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Clave" class="form-label">Contraseña</label>
+                        <input asp-for="Clave" class="form-control" placeholder="••••" />
+                        <span asp-validation-for="Clave" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-dark w-100">Ingresar</button>
+                </form>
+                <p class="text-muted mt-3 small text-center">
+                    Demo: usuario <strong>admin</strong> / clave <strong>1234</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

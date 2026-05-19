@@ -3,7 +3,7 @@ using System;
 
 namespace p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula
 {
-    internal class Pelicula : Contenido
+    public class Pelicula : Contenido
     {
         private TimeSpan duracion;
         private byte calificacion;

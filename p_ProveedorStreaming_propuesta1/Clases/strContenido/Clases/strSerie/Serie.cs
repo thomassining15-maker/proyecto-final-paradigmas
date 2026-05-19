@@ -3,7 +3,7 @@ using System;
 
 namespace p_ProveedorStreaming.Clases.strContenido.Clases.strSerie
 {
-    internal class Serie : Contenido
+    public class Serie : Contenido
     {
         private byte temporadas;
         private byte cap_x_temp;

@@ -3,6 +3,7 @@ using p_ProveedorStreaming.Clases.strCuenta;
 using p_ProveedorStreaming.Clases.strContenido.Clases;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace p_ProveedorStreaming.Clases.strCuenta
@@ -26,6 +27,33 @@ namespace p_ProveedorStreaming.Clases.strCuenta
         {
             return _cuentas.FirstOrDefault(c => (ulong)c.Usuario.Id_interno == idUsuario);
         }
+        public List<Cuenta> ObtenerTodas() => _cuentas;
+
+        public void Cargar(string nomArchivo, UsuarioService usuarioService)
+        {
+            string ruta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Archivos", nomArchivo);
+
+            if (!File.Exists(ruta))
+                throw new FileNotFoundException($"No se encontró el archivo: {ruta}");
+
+            foreach (var linea in File.ReadAllLines(ruta))
+            {
+                if (string.IsNullOrWhiteSpace(linea) || linea.StartsWith("#"))
+                    continue;
+
+                try
+                {
+                    var usuario = usuarioService.BuscarPorNombre(linea.Trim());
+                    if (_cuentas.All(c => c.Usuario.Nombre != usuario.Nombre))
+                        Crear(usuario);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error procesando línea '{linea}': {ex.Message}");
+                }
+            }
+        }
+
         public void RegistrarVisualizacion(ulong idCuenta, Contenido contenido)
         {
             // Buscamos la cuenta por el ID del usuario vinculado

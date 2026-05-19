@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Registrar Puntaje";
+}
+
+<h2>Registrar Puntaje — @ViewBag.NombreJuego</h2>
+
+<div class="card col-md-5">
+    <div class="card-body">
+        <form asp-action="Record" method="post">
+            <input type="hidden" name="nombreJuego" value="@ViewBag.NombreJuego" />
+            <div class="mb-3">
+                <label class="form-label">Usuario</label>
+                <select name="nombreUsuario" class="form-select" required>
+                    <option value="">-- Seleccione --</option>
+                    @foreach (var u in (List<p_ProveedorStreaming.Clases.strUsuario.Usuario>)ViewBag.Usuarios)
+                    {
+                        <option value="@u.Nombre">@u.Nombre (@u.Puntos pts)</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Puesto obtenido</label>
+                <select name="puesto" class="form-select">
+                    <option value="1">1° puesto (+30 pts)</option>
+                    <option value="2">2° puesto (+20 pts)</option>
+                    <option value="3">3° puesto (+10 pts)</option>
+                    <option value="4">Otro (+5 pts)</option>
+                </select>
+            </div>
+            <p class="text-muted small">
+                Si el puntaje supera el récord actual, el <strong>aspecto GestionRecord</strong>
+                validará y el <strong>evento NuevoRecord</strong> se disparará.
+            </p>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+        </form>
+    </div>
+</div>

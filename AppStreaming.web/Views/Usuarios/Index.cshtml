@@ -1,0 +1,53 @@
+@using p_ProveedorStreaming.Clases.strUsuario
+@model List<p_ProveedorStreaming.Clases.strUsuario.Usuario>
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Usuarios</h2>
+    @if (Context.Session.GetString("rol") == "admin")
+    {
+        <a class="btn btn-primary" asp-action="Crear">+ Nuevo Usuario</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No hay usuarios registrados.</p>
+}
+else
+{
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Afiliación</th>
+                <th>Puntos</th>
+                <th>Categoría</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@u.Id_interno</td>
+                    <td>@u.Nombre</td>
+                    <td>@u.Fecha_afiliacion.ToShortDateString()</td>
+                    <td>@u.Puntos</td>
+                    <td>
+                        @{
+                            var badgeClass = u.Categoria switch {
+                                ReglasNegocioUsuario.l_categorias.Master => "bg-danger",
+                                ReglasNegocioUsuario.l_categorias.Pro => "bg-warning text-dark",
+                                _ => "bg-secondary"
+                            };
+                        }
+                        <span class="badge @badgeClass">@u.Categoria</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

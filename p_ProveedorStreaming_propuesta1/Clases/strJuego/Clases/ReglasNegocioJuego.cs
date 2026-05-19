@@ -4,7 +4,7 @@ using System.Text;
 
 namespace p_ProveedorStreaming.Clases.strJuego.Clases
 {
-    internal static class ReglasNegocioJuego
+    public static class ReglasNegocioJuego
     {
         public static readonly byte ptos_primerpuesto = 30;
         public static readonly byte ptos_segundopuesto = 20;
