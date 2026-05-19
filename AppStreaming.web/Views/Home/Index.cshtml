@@ -1,0 +1,60 @@
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="row mb-4">
+    <div class="col">
+        <h2>Bienvenido a StreamingMax</h2>
+        <p class="text-muted">Sistema de proveedor de streaming — Paradigmas de Programación 2026</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-5">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body text-center">
+                <h4 class="card-title">@ViewBag.TotalUsuarios</h4>
+                <p class="card-text">Usuarios</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body text-center">
+                <h4 class="card-title">@ViewBag.TotalContenidos</h4>
+                <p class="card-text">Contenidos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body text-center">
+                <h4 class="card-title">@ViewBag.TotalJuegos</h4>
+                <p class="card-text">Juegos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body text-center">
+                <h4 class="card-title">@(ViewBag.Notificaciones != null ? ((IReadOnlyList<string>)ViewBag.Notificaciones).Count : 0)</h4>
+                <p class="card-text">Notificaciones</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.Notificaciones != null && ((IReadOnlyList<string>)ViewBag.Notificaciones).Count > 0)
+{
+    <h4>Bandeja de eventos</h4>
+    <ul class="list-group">
+        @foreach (var msg in (IReadOnlyList<string>)ViewBag.Notificaciones)
+        {
+            <li class="list-group-item">@msg</li>
+        }
+    </ul>
+}
+else
+{
+    <p class="text-muted">No hay eventos registrados aún. Agrega contenido, reproduce algo o registra un récord.</p>
+}

@@ -1,0 +1,7 @@
+# Formato: nombre
+# Líneas que empiezan con # son ignoradas
+Maria Gomez
+Carlos Perez
+Luisa Martinez
+Ana Torres
+Juan Rodriguez

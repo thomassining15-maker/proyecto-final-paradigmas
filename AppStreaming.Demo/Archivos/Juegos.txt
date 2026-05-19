@@ -1,0 +1,4 @@
+# Formato: nombre|genero
+FIFA 25|Deportes
+Call of Duty|Accion
+Minecraft|Aventura

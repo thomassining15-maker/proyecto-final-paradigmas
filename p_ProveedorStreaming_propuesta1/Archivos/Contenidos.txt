@@ -1,0 +1,9 @@
+# Formato peliculas:  P|nombre|duracion(hh:mm:ss)|calificacion(1-2)
+# Formato series:     S|nombre|temporadas|capitulos_x_temporada
+# Líneas que empiezan con # son ignoradas
+P|Interstellar|02:49:00|1
+P|El Padrino|02:55:00|1
+P|Inception|02:28:00|2
+S|Breaking Bad|5|10
+S|Game of Thrones|8|10
+S|Stranger Things|4|7

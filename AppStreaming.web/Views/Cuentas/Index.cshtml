@@ -1,0 +1,39 @@
+@model List<p_ProveedorStreaming.Clases.strCuenta.Cuenta>
+@{
+    ViewData["Title"] = "Cuentas";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Cuentas</h2>
+    @if (Context.Session.GetString("rol") == "admin")
+    {
+        <a class="btn btn-primary" asp-action="Crear">+ Nueva Cuenta</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">No hay cuentas registradas.</p>
+}
+else
+{
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Usuario</th>
+                <th>Puntos</th>
+                <th>Categoría</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Usuario.Nombre</td>
+                    <td>@c.Usuario.Puntos</td>
+                    <td>@c.Usuario.Categoria</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

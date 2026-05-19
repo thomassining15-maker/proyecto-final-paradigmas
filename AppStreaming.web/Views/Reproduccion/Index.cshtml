@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Reproducción";
+}
+
+<h2>Reproducir Contenido</h2>
+<p class="text-muted">El <strong>aspecto de Gestión de Puntos</strong> interceptará la reproducción y sumará puntos automáticamente.</p>
+
+<div class="card col-md-6">
+    <div class="card-body">
+        <form asp-action="Reproducir" method="post">
+            <div class="mb-3">
+                <label class="form-label">Usuario</label>
+                <select name="nombreUsuario" class="form-select" required>
+                    <option value="">-- Seleccione usuario --</option>
+                    @foreach (var u in (List<p_ProveedorStreaming.Clases.strUsuario.Usuario>)ViewBag.Usuarios)
+                    {
+                        <option value="@u.Nombre">@u.Nombre — @u.Puntos pts (@u.Categoria)</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contenido</label>
+                <select name="nombreContenido" class="form-select" required>
+                    <option value="">-- Seleccione contenido --</option>
+                    @foreach (var c in (List<p_ProveedorStreaming.Clases.strContenido.Clases.Contenido>)ViewBag.Contenidos)
+                    {
+                        string tipo = c is p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula.Pelicula ? "Película" : "Serie";
+                        <option value="@c.Nombre">[@tipo] @c.Nombre</option>
+                    }
+                </select>
+            </div>
+            <p class="text-muted small">
+                Películas suman <strong>50 pts</strong> — Episodios de serie suman <strong>28 pts</strong>
+            </p>
+            <button type="submit" class="btn btn-success">Reproducir</button>
+        </form>
+    </div>
+</div>
