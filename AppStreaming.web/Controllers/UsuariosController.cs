@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using AppStreaming.web.Servicios;
+using p_ProveedorStreaming.Clases.strUsuario;
+using p_ProveedorStreaming.Interfaces;
 
 namespace AppStreaming.web.Controllers;
 
 public class UsuariosController : Controller
 {
-    private readonly UsuarioWebService _usuarioSvc;
+    private readonly UsuarioService _usuarioSvc;
     private readonly NotificacionService _notif;
 
-    public UsuariosController(UsuarioWebService usuarioSvc, NotificacionService notif)
+    public UsuariosController(UsuarioService usuarioSvc, NotificacionService notif)
     {
         _usuarioSvc = usuarioSvc;
         _notif = notif;
@@ -38,7 +40,7 @@ public class UsuariosController : Controller
 
         try
         {
-            string resultado = _usuarioSvc.AgregarConAspecto(nombre);
+            string resultado = _usuarioSvc.AgregarConValidacion(nombre);
             _notif.Agregar($"[Nuevo Usuario] {nombre} registrado en el sistema.");
             TempData["Exito"] = resultado;
         }

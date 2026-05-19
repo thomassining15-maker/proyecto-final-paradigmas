@@ -1,16 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using AppStreaming.web.Servicios;
+using p_ProveedorStreaming.Clases.strContenido;
+using p_ProveedorStreaming.Clases.strCuenta;
+using p_ProveedorStreaming.Clases.strUsuario;
 
 namespace AppStreaming.web.Controllers;
 
 public class ReproduccionController : Controller
 {
-    private readonly ContenidoWebService _contenidoSvc;
-    private readonly UsuarioWebService _usuarioSvc;
-    private readonly CuentaWebService _cuentaSvc;
+    private readonly ContenidoService _contenidoSvc;
+    private readonly UsuarioService _usuarioSvc;
+    private readonly CuentaService _cuentaSvc;
 
-    public ReproduccionController(ContenidoWebService contenidoSvc,
-        UsuarioWebService usuarioSvc, CuentaWebService cuentaSvc)
+    public ReproduccionController(ContenidoService contenidoSvc,
+        UsuarioService usuarioSvc, CuentaService cuentaSvc)
     {
         _contenidoSvc = contenidoSvc;
         _usuarioSvc = usuarioSvc;
@@ -36,17 +39,8 @@ public class ReproduccionController : Controller
 
         try
         {
-            var usuario = _usuarioSvc.BuscarPorNombre(nombreUsuario);
-            var contenido = _contenidoSvc.ObtenerPorTitulo(nombreContenido);
-
-            // Asignar usuario activo y reproducir — el aspecto GestionPuntos interviene aquí
-            contenido.UsuarioActivo = usuario;
-            contenido.Reproducir();
-
-            // Registrar en la cuenta del usuario
-            _cuentaSvc.RegistrarVisualizacion((ulong)usuario.Id_interno, contenido);
-
-            TempData["Exito"] = $"{usuario.Nombre} reprodujo '{nombreContenido}'. Puntos actuales: {usuario.Puntos} | Categoría: {usuario.Categoria}";
+            string msg = _contenidoSvc.Reproducir(nombreUsuario, nombreContenido, _usuarioSvc, _cuentaSvc);
+            TempData["Exito"] = msg;
         }
         catch (Exception ex)
         {

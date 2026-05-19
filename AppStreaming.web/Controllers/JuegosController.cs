@@ -1,17 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using AppStreaming.web.Servicios;
+using p_ProveedorStreaming.Clases.strJuego;
+using p_ProveedorStreaming.Clases.strUsuario;
 
 namespace AppStreaming.web.Controllers;
 
 public class JuegosController : Controller
 {
-    private readonly JuegoWebService _juegoSvc;
-    private readonly UsuarioWebService _usuarioSvc;
+    private readonly JuegoService _juegoSvc;
+    private readonly UsuarioService _usuarioSvc;
+    private readonly NotificacionService _notif;
 
-    public JuegosController(JuegoWebService juegoSvc, UsuarioWebService usuarioSvc)
+    public JuegosController(JuegoService juegoSvc, UsuarioService usuarioSvc, NotificacionService notif)
     {
         _juegoSvc = juegoSvc;
         _usuarioSvc = usuarioSvc;
+        _notif = notif;
     }
 
     public IActionResult Index()
@@ -38,7 +42,7 @@ public class JuegosController : Controller
 
         try
         {
-            _juegoSvc.Agregar(nombre, genero);
+            _juegoSvc.Agregar(nombre, genero, _notif);
             TempData["Exito"] = $"Juego '{nombre}' agregado al catálogo.";
         }
         catch (Exception ex)
@@ -69,8 +73,7 @@ public class JuegosController : Controller
 
         try
         {
-            var usuario = _usuarioSvc.BuscarPorNombre(nombreUsuario);
-            string msg = _juegoSvc.RegistrarPuntaje(nombreJuego, usuario, puesto);
+            string msg = _juegoSvc.RegistrarPuntaje(nombreJuego, nombreUsuario, puesto, _usuarioSvc);
             TempData["Exito"] = msg;
         }
         catch (Exception ex)

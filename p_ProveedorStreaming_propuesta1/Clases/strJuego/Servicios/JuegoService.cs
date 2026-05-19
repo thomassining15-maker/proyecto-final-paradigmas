@@ -1,4 +1,5 @@
 ﻿using p_ProveedorStreaming.Clases.strJuego.Clases;
+using p_ProveedorStreaming.Clases.strUsuario;
 using p_ProveedorStreaming.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,28 @@ namespace p_ProveedorStreaming.Clases.strJuego
         public void FinalizarPartida()
         {
             Console.WriteLine("[Sistema] Partida finalizada. Verificando récords vía interceptor...");
+        }
+
+        public void Agregar(string nombre, string genero, INotificador? notif = null)
+        {
+            var juego = new Juego(nombre, genero);
+            if (notif != null)
+            {
+                juego.pub_nuevo_tit.EventoNuevoTitulo += titulo => notif.NotificarNuevoTitulo(titulo?.ToString() ?? "");
+                juego.pub_nuevo_rec.EventoNuevoRecord += record => notif.NotificarNuevoRecord(nombre, record);
+            }
+            Agregar(juego);
+        }
+
+        public string RegistrarPuntaje(string nombreJuego, string nombreUsuario, byte puesto,
+            UsuarioService usuarioService)
+        {
+            var juego = BuscarPorNombre(nombreJuego);
+            var usuario = usuarioService.BuscarPorNombre(nombreUsuario);
+            string msg = juego.RegistrarPuntaje(usuario, puesto);
+            if (juego.Nro_record == 0 || (puesto == 1 && usuario.Puntos > juego.Nro_record))
+                juego.ObtenerNuevoRecord(usuario.Puntos, usuario, juego, juego);
+            return msg;
         }
 
         public void Cargar(string nomArchivo)

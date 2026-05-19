@@ -1,6 +1,8 @@
 ﻿using p_ProveedorStreaming.Clases.strContenido.Clases;
 using p_ProveedorStreaming.Clases.strContenido.Clases.strPelicula;
 using p_ProveedorStreaming.Clases.strContenido.Clases.strSerie;
+using p_ProveedorStreaming.Clases.strCuenta;
+using p_ProveedorStreaming.Clases.strUsuario;
 using p_ProveedorStreaming.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -50,6 +52,41 @@ namespace p_ProveedorStreaming.Clases.strContenido
                 throw new Exception($"[Error] El contenido '{nombre}' no existe en el catálogo.");
 
             return contenido;
+        }
+
+        public void AgregarPelicula(string nombre, TimeSpan duracion, byte calificacion, INotificador? notif = null)
+        {
+            var pelicula = new Pelicula(nombre, duracion, calificacion);
+            if (notif != null)
+            {
+                pelicula.pub_nuevo_tit.EventoNuevoTitulo += titulo => notif.NotificarNuevoTitulo(titulo?.ToString() ?? "");
+                pelicula.pub_contenido_visto.EventoContenidoVisto += (c, u) => notif.NotificarContenidoVisto(u.Nombre, c);
+            }
+            Agregar(pelicula);
+            pelicula.ObtenerNuevoTitulo(pelicula.Nombre);
+        }
+
+        public void AgregarSerie(string nombre, byte temporadas, byte capXTemp, INotificador? notif = null)
+        {
+            var serie = new Serie(nombre, temporadas, capXTemp);
+            if (notif != null)
+            {
+                serie.pub_nuevo_tit.EventoNuevoTitulo += titulo => notif.NotificarNuevoTitulo(titulo?.ToString() ?? "");
+                serie.pub_contenido_visto.EventoContenidoVisto += (c, u) => notif.NotificarContenidoVisto(u.Nombre, c);
+            }
+            Agregar(serie);
+            serie.ObtenerNuevoTitulo(serie.Nombre);
+        }
+
+        public string Reproducir(string nombreUsuario, string nombreContenido,
+            UsuarioService usuarioService, CuentaService cuentaService)
+        {
+            var usuario = usuarioService.BuscarPorNombre(nombreUsuario);
+            var contenido = ObtenerPorTitulo(nombreContenido);
+            contenido.UsuarioActivo = usuario;
+            contenido.Reproducir();
+            cuentaService.RegistrarVisualizacion((ulong)usuario.Id_interno, contenido);
+            return $"{usuario.Nombre} reprodujo '{nombreContenido}'. Puntos: {usuario.Puntos} | Categoría: {usuario.Categoria}";
         }
 
         public void Cargar(string nomArchivo)

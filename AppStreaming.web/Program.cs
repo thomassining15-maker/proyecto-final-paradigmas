@@ -1,13 +1,19 @@
 using AppStreaming.web.Servicios;
-using p_ProveedorStreaming.Aspectos;
 using p_ProveedorStreaming;
+using p_ProveedorStreaming.Aspectos;
+using p_ProveedorStreaming.Clases;
+using p_ProveedorStreaming.Clases.strContenido;
+using p_ProveedorStreaming.Clases.strCuenta;
+using p_ProveedorStreaming.Clases.strJuego;
+using p_ProveedorStreaming.Clases.strUsuario;
+using p_ProveedorStreaming.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ─── MVC ───────────────────────────────────────────────────────────────────
 builder.Services.AddControllersWithViews();
 
-// ─── SESIÓN (aspecto de autenticación) ─────────────────────────────────────
+// ─── SESIÓN ────────────────────────────────────────────────────────────────
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -17,40 +23,34 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// ─── ASPECTOS ──────────────────────────────────────────────────────────────
+// ─── ASPECTOS (biblioteca) ─────────────────────────────────────────────────
 builder.Services.AddSingleton<Interceptor_GestionPuntos>();
 builder.Services.AddSingleton<Interceptor_GestionRecord>();
 builder.Services.AddSingleton<Interceptor_Validacion>();
 builder.Services.AddSingleton<Interceptor_Autenticacion>();
 builder.Services.AddSingleton<MensajeFactory>();
 
-// ─── SERVICIOS WEB (Singleton = estado compartido en toda la app)
-builder.Services.AddSingleton<UsuarioWebService>();
-builder.Services.AddSingleton<ContenidoWebService>();
-builder.Services.AddSingleton<JuegoWebService>();
-builder.Services.AddSingleton<CuentaWebService>();
-builder.Services.AddSingleton<AuthService>();
+// ─── SERVICIOS DE LA BIBLIOTECA ────────────────────────────────────────────
+builder.Services.AddSingleton<UsuarioService>(sp =>
+    new UsuarioService(sp.GetRequiredService<MensajeFactory>()));
+builder.Services.AddSingleton<ContenidoService>();
+builder.Services.AddSingleton<JuegoService>();
+builder.Services.AddSingleton<CuentaService>();
+builder.Services.AddSingleton<AccesoService>();
+
+// ─── SERVICIO DE NOTIFICACIONES (UI) ───────────────────────────────────────
 builder.Services.AddSingleton<NotificacionService>();
+builder.Services.AddSingleton<INotificador>(sp => sp.GetRequiredService<NotificacionService>());
 
 var app = builder.Build();
 
-// ─── PRECARGA DE DATOS ─────────────────────────────────────────────────────
-var usuarioSvc   = app.Services.GetRequiredService<UsuarioWebService>();
-var contenidoSvc = app.Services.GetRequiredService<ContenidoWebService>();
-var juegoSvc     = app.Services.GetRequiredService<JuegoWebService>();
-var cuentaSvc    = app.Services.GetRequiredService<CuentaWebService>();
-var notifSvc     = app.Services.GetRequiredService<NotificacionService>();
+// ─── PRECARGA DE DATOS (bootstrap de la biblioteca) ───────────────────────
+var usuarioSvc   = app.Services.GetRequiredService<UsuarioService>();
+var contenidoSvc = app.Services.GetRequiredService<ContenidoService>();
+var juegoSvc     = app.Services.GetRequiredService<JuegoService>();
+var cuentaSvc    = app.Services.GetRequiredService<CuentaService>();
 
-// Suscribir los 4 eventos a la bandeja de notificaciones antes de cargar datos
-usuarioSvc.SuscribirEventos(notifSvc);
-contenidoSvc.SuscribirEventos(notifSvc);
-juegoSvc.SuscribirEventos(notifSvc);
-
-// Cargar datos desde archivos .txt
-try { usuarioSvc.Cargar("Usuarios.txt"); } catch { }
-try { contenidoSvc.Cargar("Contenidos.txt"); } catch { }
-try { juegoSvc.Cargar("Juegos.txt"); } catch { }
-try { cuentaSvc.Cargar("Cuentas.txt"); } catch { }
+BootstrapDatos.Inicializar(usuarioSvc, contenidoSvc, juegoSvc, cuentaSvc);
 
 // ─── PIPELINE ──────────────────────────────────────────────────────────────
 if (!app.Environment.IsDevelopment())

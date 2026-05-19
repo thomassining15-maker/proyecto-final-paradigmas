@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using AppStreaming.web.Servicios;
+using p_ProveedorStreaming.Clases.strCuenta;
+using p_ProveedorStreaming.Clases.strUsuario;
 
 namespace AppStreaming.web.Controllers;
 
 public class CuentasController : Controller
 {
-    private readonly CuentaWebService _cuentaSvc;
-    private readonly UsuarioWebService _usuarioSvc;
+    private readonly CuentaService _cuentaSvc;
+    private readonly UsuarioService _usuarioSvc;
 
-    public CuentasController(CuentaWebService cuentaSvc, UsuarioWebService usuarioSvc)
+    public CuentasController(CuentaService cuentaSvc, UsuarioService usuarioSvc)
     {
         _cuentaSvc = cuentaSvc;
         _usuarioSvc = usuarioSvc;
@@ -40,7 +42,8 @@ public class CuentasController : Controller
 
         try
         {
-            _cuentaSvc.Crear(nombreUsuario);
+            var usuario = _usuarioSvc.BuscarPorNombre(nombreUsuario);
+            _cuentaSvc.Crear(usuario);
             TempData["Exito"] = $"Cuenta creada para {nombreUsuario}.";
         }
         catch (Exception ex)

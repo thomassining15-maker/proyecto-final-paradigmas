@@ -1,4 +1,7 @@
-﻿using p_ProveedorStreaming.Clases.strUsuario;
+﻿using p_ProveedorStreaming;
+using p_ProveedorStreaming.Clases;
+using p_ProveedorStreaming.Clases.strUsuario;
+using p_ProveedorStreaming.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +13,12 @@ namespace p_ProveedorStreaming.Clases.strUsuario
     public class UsuarioService
     {
         private List<Usuario> _usuarios = new();
+        private readonly MensajeFactory? _factory;
+
+        public UsuarioService(MensajeFactory? factory = null)
+        {
+            _factory = factory;
+        }
 
         public void Agregar(Usuario usuario)
         {
@@ -17,6 +26,17 @@ namespace p_ProveedorStreaming.Clases.strUsuario
             {
                 _usuarios.Add(usuario);
             }
+        }
+
+        public string AgregarConValidacion(string nombre)
+        {
+            if (_factory == null)
+                throw new InvalidOperationException("Se requiere MensajeFactory para AgregarConValidacion.");
+            var usuario = new Usuario(nombre);
+            IRegistroEntidad bd = _factory.CrearMensajeValidacion(new RegistroBD());
+            string resultado = bd.Registrar(usuario);
+            _usuarios.Add(usuario);
+            return resultado;
         }
 
         public List<Usuario> ObtenerTodos() => _usuarios;
